@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">CryptIMG</string>
+    <string name="encrypt">Encrypt</string>
+    <string name="decrypt">Decrypt</string>
+    <string name="encrypt_help">Encryption Help</string>
+    <string name="decrypt_help">Decryption Help</string>
+    <string name="share">Share</string>
+    <string name="text_encrypt">Enter text to Encrypt</string>
+    <string name="mail_encrypt">Enter receiver Mail id</string>
+    <string name="create_passwd">Create new password</string>
+    <string name="developer_connect">Developer Connect</string>
+    <string name="browse">Browse</string>
+    <string name="text_view">Text Encrypted in the image</string>
+    <string name="write_passwd">Enter Secret Password</string>
+    <string name="help">Help</string>
+    <string name="sign_in">Sign In</string>
+    <string name="feedback">Contact</string>
+    <string name="about">About</string>
+    <string name="toast_encryption">Text is encrypted in the picuture, Now you can save!</string>
+    <string name="about_text">"Crytographic Technique,To Encrypt the image\n HiDevs Developers\n Thank you for using this Application."</string>
+    <string name="help_text">
+        **CryptIMG**\nCryptographic Text to Encrypt in Image\n\n
+        **Encrption Process**\n
+        1.First select the image from the gallery.\n
+        2.Enter the text in the required box(Max Characters up to 50).\n
+        3.Create the password for your file.\n
+        4.Click Encrypt Button to Proceed the task\n
+        5.And Now the new encrypted image will be saved in your local gallery with the folder name CryptIMG.\n
+        6.Make sure you need to wait for sometime during encryption process.\n\n\n
+        **Decryption Process**\n
+        1.Select the encrypted image from the gallery.\n
+        2.Enter the Password(Key generated during encryption).\n
+        3.Click Decrypt Button to get the original form of text\n.
+        4.Make sure you need to wait for sometime during encryption process.\n\n\n
+        **Terms and Conditions**\n
+        Don\'t use this application for any illegal activities.\n
+        If it happens, then dont blame developers\n
+        **Thank You.**\n
+        **Have a great day.**
+    </string>
+    <string name="encrypted_text">%s</string>
+
+</resources>

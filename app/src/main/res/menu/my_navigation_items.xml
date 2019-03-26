@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/encrypt"
+        android:title="@string/encrypt"
+        android:icon="@drawable/encrypt_icon"/>
+    <item android:id="@+id/decrypt"
+        android:title="@string/decrypt"
+        android:icon="@drawable/decrypt_icon"/>
+
+
+
+</menu>
