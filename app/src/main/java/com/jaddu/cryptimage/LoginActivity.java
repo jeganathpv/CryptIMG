@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     GoogleApiClient mGoogleApiClient;
     FirebaseAuth.AuthStateListener mAuthListener;
 
-    //Used to verify Remember me feature
     @Override
     protected void onStart() {
         super.onStart();
@@ -49,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         googleBtn=findViewById(R.id.googleBtn);
         mAuth=FirebaseAuth.getInstance();
 
-        //This will check user exists
+
         mAuthListener=new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -59,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         };
-
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -84,13 +82,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //Sign In
     private void signIn(){
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent,RC_SIGN_IN);
     }
 
-    //Exit Apaplication
     @Override
     public void onBackPressed() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -113,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    //Google API to Sign IN
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -123,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInResult result=Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if(result.isSuccess()){
                 GoogleSignInAccount account=result.getSignInAccount();
+//                assert account != null;
                 firebaseAuthWithGoogle(account);
             }else {
                 Toast.makeText(LoginActivity.this,"Auth went wrong",Toast.LENGTH_SHORT).show();
@@ -131,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //Link Credentials to Firebase
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -142,12 +137,20 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this,"Authentication Failed",Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
                         }
+
+                        // ...
                     }
                 });
+
     }
+
+
 }

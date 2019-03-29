@@ -12,7 +12,6 @@ public class HelpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_help);
     }
 
-    //Back key to enter MainActivity
     @Override
     public void onBackPressed() {
         Intent intent=new Intent(getBaseContext(), MainActivity.class);

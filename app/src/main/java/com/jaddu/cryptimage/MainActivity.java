@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     String mailid;
     String password;
     String textMsg;
+    //    Bitmap bitmap;
     File dir;
     File filePath;
     Intent gallery;
@@ -110,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 openGallery();
             }
         });
-
         //encryption process is done in this area
         encryptButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,11 +120,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     mailid=mailText.getText().toString();
                     password=passwd.getText().toString();
                     textMsg=editText.getText().toString();
-                    //verify mail id 
                     if(!mailid.equals("")){
-                        //verify key found
                         if(!password.equals("")){
-                            //verify text found
                             if(!textMsg.equals("")){
                                 encrptImage();
                             }else{
@@ -149,12 +147,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void savePicture() {
         //here we create bitmap image
+//        bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.jaddupatern);
 
         //this provide dir-- storage/emulated/0/
         filePath= Environment.getExternalStorageDirectory();
-
         //we create directory for CryptIMG
         dir=new File(filePath.getAbsolutePath()+"/CryptIMG");
+//        dir.mkdirs();
         boolean isDirectoryCreated= dir.exists();
         if (!isDirectoryCreated) dir.mkdirs();
 
@@ -165,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         try{
             outputStream=new FileOutputStream(file);
             encryptImage.compress(Bitmap.CompressFormat.PNG,100,outputStream);
+//            bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
             outputStream.flush();
             outputStream.close();
             Toast.makeText(MainActivity.this,"Image saved"+file.toString(), Toast.LENGTH_SHORT).show();
@@ -197,19 +197,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         originalImage= BitmapFactory.decodeStream(fis);
 
         encryptImage=originalImage.copy(originalImage.getConfig(),true);
+        String currentUser= Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
 
-        //Use Map Object to Store Auth Details in Firebase
+        String text=textMsg;
+        text=encryptText(text);
+
+
         Map<String,String> taskMap = new HashMap<>();
-        taskMap.put("MailID", mailid);
+        taskMap.put("ReceiverID", mailid);
         taskMap.put("Password",password);
+        taskMap.put("Text",text);
+        taskMap.put("Sender ID",currentUser);
 
-        //Set Data to FireBase DB
         FirebaseDatabase.getInstance().getReference().push().setValue(taskMap);
         mailid=mailid.replace("@gmail.com","");
 
+
+
         int width=encryptImage.getWidth();
-        String text=textMsg;
-        text=encryptText(text);
+//        String text=textMsg;
+//        text=encryptText(text);
         if(text.length()<10)
             text= "0"+text.length() + text;
         else
@@ -221,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         for(char c:chars)
             asciiChars.add((int)c);
 
-        //Encrypt Text into Image
         for (int x = 0; x < width; x++) {
             if (x % SPACE == 0 && index < asciiChars.size()) {
                 encryptImage.setPixel(x,TOP_MARGIN, Color.rgb(1,asciiChars.get(index),1));
@@ -229,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }
         }
         index=0;
-
 
         text=mailid+" "+password;
         int height=encryptImage.getHeight()-TOP_MARGIN;
@@ -246,13 +251,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         for(char c:auths)
             asciiAuths.add((int)c);
 
-        //Encrypt Auth Details into Picture
         for (int x = 0; x < width; x++) {
             if (x % SPACE == 0 && index < asciiAuths.size()) {
                 encryptImage.setPixel(x,height, Color.rgb(1,asciiAuths.get(index),1));
                 index++;
             }
         }
+
 
         ENCRYPT_IMAGE=1;
         Toast.makeText(MainActivity.this,R.string.toast_encryption,Toast.LENGTH_LONG).show();
@@ -266,14 +271,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if(text.length()%2!=0) {
             text+="#";
         }
-       
         //Reversing the string
         String reverse;
         reverse = "";
         for(int i = text.length() - 1; i >= 0; i--)
             reverse = reverse + text.charAt(i);
         text=reverse;
-       
         //Split string into two substring
         int textLen=text.length();
         String textA="",textB="";
@@ -283,7 +286,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         for(int i=(textLen/2);i<text.length();i++) {
             textB+=text.charAt(i);
         }
-       
         //Merge two substrings
         text=textB+textA;
 
@@ -294,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 textChar[i]++;
             }
         }
-       
         //Change First and Last Char
         char temp=textChar[0];
         textChar[0]=textChar[textLen-1];
@@ -307,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void afterEncryption(){
-        //Alert Box to Save Picture
         AlertDialog.Builder builder= new AlertDialog.Builder(this);
         builder.setTitle("Save Picture")
                 .setMessage("Click OK to save image in Gallery.")
@@ -315,8 +315,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(MainActivity.this,"Please wait, it may take some time",Toast.LENGTH_LONG).show();
-                        
-                        //After Marshmallow android has realtime protection so we need to check runtime permission
+                        //after marshmallow android has protection so we need to provide runtime permission
                         if (!checkPermission()) {
                             savePicture();
                         } else {
@@ -326,6 +325,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                                 savePicture();
                             }
                         }
+
                     }
                 })
                 .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -338,7 +338,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         alert.show();
     }
 
-    //Open Gallery
     private void openGallery(){
         gallery=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery,PICK_IMAGE);
@@ -351,11 +350,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             imageUri=data.getData();
             imageView.setImageURI(imageUri);
             filename=imageUri.getPath();
+//            editText.setText(filename);
             IMAGE_ADD=1;
         }
     }
 
-    //To Check Runtime Permission
+
     private boolean checkPermission() {
         return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -420,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
 
-    //Menu Added
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -428,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Menu Item Added
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.about){
@@ -467,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
 
-    //Bottom Navigation 
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -485,7 +485,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return true;
     }
 
-    //Exit Application
     @Override
     public void onBackPressed() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);

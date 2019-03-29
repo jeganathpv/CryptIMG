@@ -41,6 +41,7 @@ public class DecryptActivity extends AppCompatActivity implements BottomNavigati
     public static final int TOP_MARGIN = 13;
     public static  int IMAGE_ADD=0;
     public static final int SPACE = 14;
+//    public static int PASS_MATCHED=0;
     Uri imageUri;
     String filename;
     Bitmap originalImage;
@@ -84,7 +85,6 @@ public class DecryptActivity extends AppCompatActivity implements BottomNavigati
             }
         });
 
-        //decryption process starts
         decryptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,14 +100,13 @@ public class DecryptActivity extends AppCompatActivity implements BottomNavigati
     }
 
 
-    //Create Menu
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Menu Items Added
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.about){
@@ -145,7 +144,6 @@ public class DecryptActivity extends AppCompatActivity implements BottomNavigati
     }
 
 
-    //Bottom Navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -163,7 +161,7 @@ public class DecryptActivity extends AppCompatActivity implements BottomNavigati
         return true;
     }
 
-    //Exit Application
+
     @Override
     public void onBackPressed() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(DecryptActivity.this);
@@ -185,7 +183,6 @@ public class DecryptActivity extends AppCompatActivity implements BottomNavigati
         alertDialog.show();
     }
 
-
     private void decryptImage() {
         InputStream fis= null;
         try {
@@ -203,7 +200,7 @@ public class DecryptActivity extends AppCompatActivity implements BottomNavigati
         ArrayList<Character> characters = new ArrayList<>();
         ArrayList<Character> authtext=new ArrayList<>();
 
-        //Decrypt Text Details
+
         for (int pixel = 0; pixel < width; pixel++) {
             if (pixel % SPACE == 0) {
                 int color=decryptImage.getPixel(pixel,TOP_MARGIN);
@@ -257,6 +254,7 @@ public class DecryptActivity extends AppCompatActivity implements BottomNavigati
         assert currentUser != null;
         currentUser=currentUser.replace("@gmail.com","");
         String passwdText=passwd.getText().toString();
+//        final String authEncrypt=currentUser+" "+passwdText;
 
         if(auths[0].equals(currentUser)){
             if(auths[1].equals(passwdText)){

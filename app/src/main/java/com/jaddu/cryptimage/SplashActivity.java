@@ -18,12 +18,9 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         imageView=findViewById(R.id.imageView);
-
-        //Load Animation(Transition)
         Animation animation= AnimationUtils.loadAnimation(this,R.anim.transition);
         imageView.startAnimation(animation);
 
-        //Handler Object to run Animation
         Handler handler= new Handler();
         handler.postDelayed(new Runnable() {
             @Override
